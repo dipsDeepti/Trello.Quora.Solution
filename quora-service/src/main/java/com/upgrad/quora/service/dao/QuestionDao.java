@@ -16,4 +16,9 @@ public class QuestionDao {
         entityManager.persist(questionEntity);
         return questionEntity;
     }
+
+    public void getAllQuestions()
+    {
+
+    }
 }
