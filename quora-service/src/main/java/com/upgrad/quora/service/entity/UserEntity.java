@@ -9,6 +9,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "users", schema = "public")
+@NamedQueries({
+                @NamedQuery(name = "userByUuid", query = "select u from UserEntity u where u.uuid = :uuid")
+        })
 public class UserEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -19,15 +22,15 @@ public class UserEntity implements Serializable {
     @Size(max = 64)
     private String uuid;
 
-    @Column(name = "firstName")
+    @Column(name = "firstname")
     @Size(max = 30)
     private String firstName;
 
-    @Column(name = "lastName")
+    @Column(name = "lastname")
     @Size(max = 30)
     private String lastName;
 
-    @Column(name = "userName")
+    @Column(name = "username")
     @Size(max = 30)
     private String userName;
 
@@ -38,7 +41,8 @@ public class UserEntity implements Serializable {
     @Column(name = "password")
     @Size(max = 255)
     private String password;
-    @Column(name = "SALT")
+
+    @Column(name = "salt")
     @NotNull
     @Size(max = 200)
     //@ToStringExclude
