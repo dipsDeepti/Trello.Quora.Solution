@@ -1,7 +1,7 @@
 server:
   servlet:
     port: 8080
-    contextPath: /quora
+    contextPath: /api
 
 spring:
 
@@ -10,13 +10,13 @@ spring:
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/Quora
+    url: jdbc:postgresql://127.0.0.1:5432/mandeep
     username: postgres
-    password: postgres
+    password: admin
 
   jpa:
     properties:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
-    database-platform: org.hibernate.dialect.PostgreSQL82Dialect
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect

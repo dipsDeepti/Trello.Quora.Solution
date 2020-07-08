@@ -1,4 +1,4 @@
-package com.upgrad.quora.service.Business;
+package com.upgrad.quora.service.business;
 
 public class CommonBusinessService {
 }
