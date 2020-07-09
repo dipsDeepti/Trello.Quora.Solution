@@ -10,9 +10,9 @@ spring:
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/Quora
+    url: jdbc:postgresql://localhost:5432/Quora
     username: postgres
-    password: postgres
+    password: password
 
   jpa:
     properties:
