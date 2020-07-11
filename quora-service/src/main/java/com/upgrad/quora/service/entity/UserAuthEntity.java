@@ -6,11 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import java.io.Serializable;
+
 
 @Entity
 @Table(name = "user_auth")
@@ -18,6 +19,9 @@ import java.time.ZonedDateTime;
   @NamedQuery(
       name = "userAuthByAccessToken",
       query = "select u from UserAuthEntity u where u.accessToken=:accessToken")
+})
+@NamedQueries({
+        @NamedQuery(name = "userAuthTokenByAccessToken", query = "select ut from UserAuthEntity ut where ut.accessToken = :accessToken ")
 })
 public class UserAuthEntity {
 
@@ -122,4 +126,5 @@ public class UserAuthEntity {
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
   }
+
 }
