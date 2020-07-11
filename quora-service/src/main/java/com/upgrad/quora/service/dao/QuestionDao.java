@@ -1,10 +1,10 @@
-package dao;
-
+package com.upgrad.quora.service.dao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.*;
 
 @Repository
 public class QuestionDao {
@@ -17,8 +17,10 @@ public class QuestionDao {
         return questionEntity;
     }
 
-    public void getAllQuestions()
+    public List<QuestionEntity> getAllQuestions()
     {
+        List<QuestionEntity> questionEntities = new ArrayList<QuestionEntity>();
 
+        return questionEntities;
     }
 }

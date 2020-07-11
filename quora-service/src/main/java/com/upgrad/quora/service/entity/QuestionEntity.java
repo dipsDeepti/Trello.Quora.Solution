@@ -21,7 +21,7 @@ public class QuestionEntity implements Serializable{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    public Integer id;
 
     @Column(name = "uuid")
     @Size(max = 64)
