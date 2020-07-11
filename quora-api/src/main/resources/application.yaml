@@ -1,16 +1,16 @@
 server:
   servlet:
     port: 8080
-    contextPath: /api
+    contextPath: /quora
 
 spring:
 
   application:
-    name:
+    name: quora-api
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/quora
+    url: jdbc:postgresql://localhost:5432/Quora
     username: postgres
     password: password
 
@@ -19,4 +19,4 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
-    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    database-platform: org.hibernate.dialect.PostgreSQL82Dialect

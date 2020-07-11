@@ -1,4 +1,5 @@
 package com.upgrad.quora.api.controller;
+import com.upgrad.quora.api.model.QuestionDetailsResponse;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.api.model.QuestionRequest;
 import com.upgrad.quora.api.model.QuestionResponse;
@@ -34,11 +35,13 @@ public class QuestionController {
       return new ResponseEntity<>("Question created successfully", HttpStatus.CREATED);
     }
   
-  /* @RequestMapping(method = RequestMethod.GET, path = "/question/all", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<QuestionDetailsResponse> getAllQuestions() {
-       QuestionDetailsResponse questionResponse = new QuestionDetailsResponse().id(createdUserEntity.getUuid()).status("Questions fetched successfully");
-        return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
-    }*/
+   @RequestMapping(method = RequestMethod.GET, path = "/question/all", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<String> getAllQuestions() {
+      // QuestionDetailsResponse questionResponse = new QuestionDetailsResponse().id(createdUserEntity.getUuid()).status("Questions fetched successfully");
+        //return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.OK);
+       return new ResponseEntity<>("Question created successfully", HttpStatus.CREATED);
+    }
+
   /* @RequestMapping(method = RequestMethod.GET, path = "question/edit/", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestion(final QuestionEditRequest questionEditRequest) {
        QuestionEditResponse questionResponse = new QuestionEditResponse().id(createdUserEntity.getUuid()).status("Questions changed successfully");
