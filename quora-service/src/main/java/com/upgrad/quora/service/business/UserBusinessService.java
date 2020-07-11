@@ -5,6 +5,7 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,7 @@ public class UserBusinessService {
         else
         {
             UserEntity userEntity = new UserEntity();
-            userEntity = userAuthTokenEntity.getUser();
+            userEntity = userAuthTokenEntity.getUserEntity();
             return userEntity;
         }
     }
