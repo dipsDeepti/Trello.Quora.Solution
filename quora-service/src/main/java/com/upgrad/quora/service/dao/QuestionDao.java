@@ -1,4 +1,4 @@
-package dao;
+package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.QuestionEntity;
 import org.springframework.stereotype.Repository;
