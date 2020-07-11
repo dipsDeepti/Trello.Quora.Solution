@@ -25,9 +25,15 @@ import java.util.Base64;
 @RestController
 @RequestMapping("/")
 public class UserController {
+    @Autowired private UserBusinessService userBusService;
 	
-	 @Autowired private UserBusinessService userBusService;
+   /**
+   * This method is for user signup.
+   * @return SignupUserResponse
+   * @throws SignUpRestrictedException - if username or email id is already existing in DB.
+   */
     @RequestMapping(
+	
             method = RequestMethod.POST,
             path = "/user/signup",
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
@@ -54,5 +60,50 @@ public class UserController {
                         .status("USER SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
     }
-}
 
+   /**
+   * This method is for user signin.
+   * @return SigninResponse
+   * @throws AuthenticationFailedException - if username doesnot exits or password is wrong.
+   */
+    @RequestMapping(
+            method = RequestMethod.POST,
+            path = "/user/signin",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SigninResponse> signin(
+            @RequestHeader("authorization") final String authorization)
+            throws AuthenticationFailedException {
+
+        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
+        String decodedText = new String(decode);
+        String[] decodedArray = decodedText.split(":");
+        UserAuthEntity userAuthEntity = userBusService.signin(decodedArray[0], decodedArray[1]);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("access-token", userAuthEntity.getAccessToken());
+
+        SigninResponse signinResponse = new SigninResponse();
+        signinResponse.setId(userAuthEntity.getUserEntity().getUuid());
+        signinResponse.setMessage("SIGNED IN SUCCESSFULLY");
+
+        return new ResponseEntity<SigninResponse>(signinResponse, headers, HttpStatus.OK);
+    }
+	
+	/**
+   * This method is for user signup.
+   * @return SignoutResponse
+   * @throws SignOutRestrictedException - if username is not signed in.
+   */
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            path = "/user/signout",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SignoutResponse> signout(
+            @RequestHeader("authorization") final String accessToken) throws SignOutRestrictedException {
+        UserEntity userEntity = userBusService.signout(accessToken);
+        SignoutResponse signoutResponse =
+                new SignoutResponse().id(userEntity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+        return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
+    }
+}
