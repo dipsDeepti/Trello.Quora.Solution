@@ -1,22 +1,30 @@
 package com.upgrad.quora.service.entity;
 
+import java.io.Serializable;
+import java.util.Date;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "question", schema = "public")
+@NamedQueries({
+	  @NamedQuery(name = "getAllQuestions", query = "select u from QuestionEntity u"),
+	  @NamedQuery(
+	      name = "getQuestionById",
+	      query = "select u from QuestionEntity u where u.uuid=:uuid"),
+	})
 public class QuestionEntity implements Serializable{
     @Id
     @Column(name = "id")
