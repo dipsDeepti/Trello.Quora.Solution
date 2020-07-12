@@ -51,7 +51,7 @@ public class QuestionService {
         QuestionEntity questionEntity = questionDao.getQuestion(questionId);
         if(questionEntity == null)
         {
-            throw new InvalidQuestionException("QUS-001", "Entered question uuid does not exist");
+            throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
         }
         if (!questionEntity.getUser().getUuid().equals(userEntity.getUuid())) {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner can edit the answer");
