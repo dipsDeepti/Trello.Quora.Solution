@@ -20,7 +20,7 @@ import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/")
 public class AnswerController {
 
 	@Autowired
