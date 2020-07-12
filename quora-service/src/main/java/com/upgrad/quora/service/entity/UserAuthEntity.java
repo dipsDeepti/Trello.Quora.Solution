@@ -18,8 +18,7 @@ import java.io.Serializable;
 @NamedQueries({
   @NamedQuery(
       name = "userAuthByAccessToken",
-      query = "select u from UserAuthEntity u where u.accessToken=:accessToken"),
-        @NamedQuery(name = "userAuthTokenByAccessToken", query = "select ut from UserAuthEntity ut where ut.accessToken = :accessToken ")
+      query = "select u from UserAuthEntity u where u.accessToken=:accessToken")
 })
 
 public class UserAuthEntity {

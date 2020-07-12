@@ -2,10 +2,15 @@ package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -14,13 +19,22 @@ public class QuestionService {
     private QuestionDao questionDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public QuestionEntity createQuestion(QuestionEntity questionEntity)
+    public QuestionEntity createQuestion(String content, UserAuthEntity userEntity)
     {
+        final QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setContent(content);
+        questionEntity.setDate(new Date());
+        questionEntity.setUuid(UUID.randomUUID().toString());
+        questionEntity.setUser(userEntity.getUserEntity());
         return questionDao.createQuestion(questionEntity);
     }
 
-    public void getAllQuestions()
+    public List<QuestionEntity> getAllQuestions()
     {
-        questionDao.getAllQuestions();
+        return questionDao.getAllQuestions();
+    }
+    public void editQuestionContent()
+    {
+
     }
 }

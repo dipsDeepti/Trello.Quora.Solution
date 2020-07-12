@@ -17,6 +17,12 @@ import java.util.Date;
 
 @Entity
 @Table(name = "question", schema = "public")
+@NamedQueries({
+        @NamedQuery(
+                name = "getAllQuestion",
+                query = "select u from QuestionEntity u")
+})
+
 public class QuestionEntity implements Serializable{
     @Id
     @Column(name = "id")

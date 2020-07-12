@@ -97,6 +97,7 @@ public class UserBusinessService {
         return userAuthEntity.getUserEntity();
     }
 
+
     // Validating the username exist in the database
     private boolean isUserNameInUse(final String userName) {
         return userDao.getUserByUserName(userName) != null;
@@ -106,8 +107,9 @@ public class UserBusinessService {
     private boolean isEmailInUse(final String email) {
         return userDao.getUserByEmail(email) != null;
     }
-   public UserEntity getUserIdByAuthorizationToken(final String authorizationToken) throws AuthorizationFailedException {
-        UserAuthEntity userAuthTokenEntity = userDao.getUserAuthToken(authorizationToken);
+
+   public UserAuthEntity getUserAuthByToken(final String authorizationToken) throws AuthorizationFailedException {
+        UserAuthEntity userAuthTokenEntity = userAuthDao.getUserAuthByToken(authorizationToken);
         if (userAuthTokenEntity == null) {
             // case when authorizationToken not found in database
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
@@ -116,9 +118,7 @@ public class UserBusinessService {
             }
         else
         {
-            UserEntity userEntity = new UserEntity();
-            userEntity = userAuthTokenEntity.getUserEntity();
-            return userEntity;
+            return userAuthTokenEntity;
         }
     }
 }
