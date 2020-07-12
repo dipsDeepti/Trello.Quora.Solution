@@ -17,6 +17,9 @@ import java.util.Date;
 
 @Entity
 @Table(name = "question", schema = "public")
+@NamedQueries({
+        @NamedQuery(name = "deleteQuestionByUuid", query = "select q from QuestionEntity q where q.uuid = :questionUuid")
+})
 public class QuestionEntity implements Serializable{
     @Id
     @Column(name = "id")
@@ -26,6 +29,19 @@ public class QuestionEntity implements Serializable{
     @Column(name = "uuid")
     @Size(max = 64)
     private String uuid;
+
+    @Column(name = "content")
+    @NotNull
+    @Size(max = 200)
+    private String content;
+
+    @Column(name ="date")
+    @NotNull
+    private Date date;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     public Integer getId() {
         return id;
@@ -66,18 +82,4 @@ public class QuestionEntity implements Serializable{
     public void setDate(Date date) {
         this.date = date;
     }
-
-    @Column(name = "content")
-    @NotNull
-    @Size(max = 200)
-    private String content;
-
-    @Column(name ="date")
-    @NotNull
-    private Date date;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    //Below annotation indicates that the name of the column in 'images' table referring the primary key in 'users' table will be 'user_id'
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
 }
