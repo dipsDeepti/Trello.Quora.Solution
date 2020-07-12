@@ -45,11 +45,18 @@ public class QuestionService {
     {
         return questionDao.getAllQuestions();
     }
-    public QuestionEntity editQuestionContent(String questionId, String content, UserEntity userEntity)
-    {
-        QuestionEntity questionEntity = new QuestionEntity();
-        questionEntity.setUser(userEntity);
-        questionEntity.setId(Integer.parseInt(questionId));
+    
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity editQuestionContent(String questionId, String content, UserEntity userEntity) throws InvalidQuestionException, AuthorizationFailedException {
+        QuestionEntity questionEntity = questionDao.getQuestion(questionId);
+        if(questionEntity == null)
+        {
+            throw new InvalidQuestionException("QUS-001", "Entered question uuid does not exist");
+        }
+        if (!questionEntity.getUser().getUuid().equals(userEntity.getUuid())) {
+            throw new AuthorizationFailedException("ATHR-003", "Only the question owner can edit the answer");
+        }
+
         questionEntity.setContent(content);
         return questionDao.editQuestionContent(questionEntity);
     }
