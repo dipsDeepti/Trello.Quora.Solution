@@ -51,4 +51,18 @@ public class QuestionDao {
         entityManager.remove(questionEntity);
     }
 
+
+    public List<QuestionEntity> getAllQuestionsByUser(UserEntity userEntity)
+    {
+        try {
+            return entityManager
+                    .createNamedQuery("getAllQuestionsByUser", QuestionEntity.class)
+                    .setParameter("userId", userEntity)
+                    .getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+
+    }
+
 }

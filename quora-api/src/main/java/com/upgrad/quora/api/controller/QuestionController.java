@@ -76,6 +76,8 @@ public class QuestionController {
         return new ResponseEntity<QuestionEditResponse>(response, headers, HttpStatus.CREATED);
     }
 
+    // use this method to delete any question from db
+    // a question can be delete either by admin or the user who created the question
     @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@PathVariable final String questionId,
                                                                  @RequestHeader("authorization") final String authToken)
@@ -84,4 +86,25 @@ public class QuestionController {
         QuestionDeleteResponse questionDeleteResponse =  new QuestionDeleteResponse().id(questionId).status("QUESTION DELETED");
         return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
+
+    // use this method to fetch all questions created by specific user
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@PathVariable final String userId,
+                                                                               @RequestHeader("authorization") final String authToken)
+    throws AuthorizationFailedException, UserNotFoundException{
+        List<QuestionEntity> questionEntities = questionService.getAllQuestionsByUser(userId, authToken);
+        List<QuestionDetailsResponse> responses = new ArrayList<QuestionDetailsResponse>();
+        HttpHeaders headers = new HttpHeaders();
+        for(QuestionEntity entity: questionEntities)
+        {
+            QuestionDetailsResponse questionResponse = new QuestionDetailsResponse();
+            questionResponse.setId(entity.getUuid());
+            questionResponse.setContent(entity.getContent());
+            responses.add(questionResponse);
+        }
+
+        return new ResponseEntity<List<QuestionDetailsResponse>>(responses, headers, HttpStatus.OK);
+    }
+
+
 }
