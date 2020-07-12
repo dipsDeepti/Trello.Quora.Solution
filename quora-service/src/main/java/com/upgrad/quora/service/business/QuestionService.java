@@ -3,6 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,8 +34,12 @@ public class QuestionService {
     {
         return questionDao.getAllQuestions();
     }
-    public void editQuestionContent()
+    public QuestionEntity editQuestionContent(String questionId, String content, UserEntity userEntity)
     {
-
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setUser(userEntity);
+        questionEntity.setId(Integer.parseInt(questionId));
+        questionEntity.setContent(content);
+        return questionDao.editQuestionContent(questionEntity);
     }
 }

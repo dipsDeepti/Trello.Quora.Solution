@@ -66,7 +66,7 @@ public class UserBusinessService {
 
         JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
         UserAuthEntity userAuthEntity = new UserAuthEntity();
-        userAuthEntity.setUuid(UUID.randomUUID().toString());
+        userAuthEntity.setUuid(userEntity.getUuid());
         userAuthEntity.setUserEntity(userEntity);
         final ZonedDateTime now = ZonedDateTime.now();
         final ZonedDateTime expiresAt = now.plusHours(8);
