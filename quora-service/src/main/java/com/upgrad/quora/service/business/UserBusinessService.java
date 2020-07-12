@@ -12,16 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Service
 public class UserBusinessService {
-    @Autowired private UserDao userDao;
-    @Autowired private UserAuthDao userAuthDao;
+
+    @Autowired
+    private UserDao userDao;
+ @Autowired private UserAuthDao userAuthDao;
     @Autowired private PasswordCryptographyProvider passwordCryptographyProvider;
 
+    // getUser method get details of user based on userUuid and authorizationToken provided by user
+    public UserEntity getUser(final String userUuid, final String authorizationToken) throws UserNotFoundException,
+            AuthorizationFailedException {
+   
     /**
      * This method checks if the username and email exist in the DB. If not then throws exception
      *
@@ -110,6 +115,29 @@ public class UserBusinessService {
         UserAuthEntity userAuthTokenEntity = userDao.getUserAuthToken(authorizationToken);
         if (userAuthTokenEntity == null) {
             // case when authorizationToken not found in database
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else {
+            String uuidString = userAuthTokenEntity.getUser().getUuid();
+            if (uuidString != null) {
+                UserEntity userEntity = userDao.getUser(userUuid);
+                if (userEntity == null) {
+                    // case when userUuid not found in database
+                    throw new UserNotFoundException("USR-001", "User with entered uuid does not exist");
+                } else {
+                    if (uuidString.equals(userUuid)) {
+                        if (userAuthTokenEntity.getLogoutAt() == null) {
+                            return userEntity;
+                        } else {
+                            // case when user is signed out
+                            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+                        }
+                    }
+
+
+                }
+
+
+            }
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         } else if(userAuthTokenEntity.getLogoutAt() != null) {
                 throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");

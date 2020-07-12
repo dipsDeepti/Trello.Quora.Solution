@@ -9,7 +9,14 @@ import javax.persistence.PersistenceContext;
 
 @Repository
 public class UserDao {
-    @PersistenceContext private EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    // getUser method fetches userEntity from database
+    public UserEntity getUser(final String userUuid) {
+        try {
+            return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", userUuid)
 
     public UserEntity createUser(UserEntity userEntity) {
         entityManager.persist(userEntity);
@@ -27,6 +34,7 @@ public class UserDao {
         }
     }
 
+    //getUserAuthToken fetch authentication information form database
     public UserEntity getUserByEmail(final String email) {
         try {
             return entityManager
