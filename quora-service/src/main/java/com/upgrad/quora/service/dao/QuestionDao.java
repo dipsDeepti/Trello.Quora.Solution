@@ -38,4 +38,17 @@ public class QuestionDao {
         return questionEntity;
     }
 
+    public QuestionEntity getQuestion(String questionId) {
+        try {
+            return entityManager.createNamedQuery("getQuestionByUuid", QuestionEntity.class)
+                    .setParameter("questionUuid", questionId).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
+    }
+    public void deleteQuestion(QuestionEntity questionEntity){
+        entityManager.remove(questionEntity);
+    }
+
 }

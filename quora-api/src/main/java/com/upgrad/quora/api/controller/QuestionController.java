@@ -4,6 +4,8 @@ import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/")
 public class QuestionController {
   
   @Autowired
@@ -72,5 +74,14 @@ public class QuestionController {
         response.setId(questionEntity.getUuid());
         response.setStatus("Question Edited");
         return new ResponseEntity<QuestionEditResponse>(response, headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion(@PathVariable final String questionId,
+                                                                 @RequestHeader("authorization") final String authToken)
+            throws AuthorizationFailedException, UserNotFoundException, InvalidQuestionException {
+        questionService.deleteQuestion(questionId, authToken);
+        QuestionDeleteResponse questionDeleteResponse =  new QuestionDeleteResponse().id(questionId).status("QUESTION DELETED");
+        return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
 }
