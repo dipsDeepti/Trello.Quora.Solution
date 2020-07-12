@@ -28,6 +28,8 @@ public class QuestionController {
   @Autowired
   UserBusinessService userBusinessService;
 
+
+  //use this method to create question and get response OK on successful creation
     @RequestMapping(method = RequestMethod.POST, path = "/question/create",  produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionResponse> createQuestion(@RequestParam String content, @RequestHeader("authorization") final String authorizationToken)
           throws AuthorizationFailedException
@@ -42,6 +44,7 @@ public class QuestionController {
       return new ResponseEntity<QuestionResponse>(response,headers,HttpStatus.CREATED);
     }
 
+//use this method to fetch list of all the questions created inside application
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String authorization) 
        throws AuthorizationFailedException
@@ -61,6 +64,7 @@ public class QuestionController {
         return new ResponseEntity<List<QuestionDetailsResponse>>(responses, headers, HttpStatus.OK);
     }
 
+ // use this method to edit an old created question and update details back to DB
     @RequestMapping(method = RequestMethod.PUT, path = "question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionEditResponse> editQuestion(@PathVariable("questionId") final String questionId,

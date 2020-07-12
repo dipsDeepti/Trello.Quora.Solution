@@ -30,6 +30,9 @@ public class QuestionService {
     @Autowired
     private UserDao userDao;
 
+
+    /* This method accepts content of the question
+     * finally creates it inside DB */
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity createQuestion(String content, UserAuthEntity userEntity)
     {
@@ -45,7 +48,10 @@ public class QuestionService {
     {
         return questionDao.getAllQuestions();
     }
-    
+
+    /* This method accepts question Id , content and user information
+    *  finally finds the question needs to be updated
+    * and update it inside Db */
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity editQuestionContent(String questionId, String content, UserEntity userEntity) throws InvalidQuestionException, AuthorizationFailedException {
         QuestionEntity questionEntity = questionDao.getQuestion(questionId);
@@ -60,7 +66,9 @@ public class QuestionService {
         questionEntity.setContent(content);
         return questionDao.editQuestionContent(questionEntity);
     }
-
+/*
+* This method deletes a question based on question Id received by user
+* Only admin user or the user eho created the question can delete it*/
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteQuestion(String questionId, String authToken) throws AuthorizationFailedException,
             InvalidQuestionException {
@@ -94,6 +102,9 @@ public class QuestionService {
         }
     }
 
+    /* this method fetches all the questions created by specific user
+    * and user needs to be authenticated
+     */
     public List<QuestionEntity> getAllQuestionsByUser(String userId, String authToken)
             throws AuthorizationFailedException, UserNotFoundException
     {
