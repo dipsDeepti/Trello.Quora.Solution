@@ -31,4 +31,14 @@ public class UserAuthDao {
   public void updateUserAuth(final UserAuthEntity updatedUserAuthEntity) {
     entityManager.merge(updatedUserAuthEntity);
   }
+
+  //getUserAuthToken fetch authentication information form database
+  public UserAuthEntity getUserAuthToken(final String accessToken) {
+    try {
+      return entityManager.createNamedQuery("userAuthByAccessToken", UserAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+    } catch (NoResultException nre) {
+      return null;
+    }
+
+  }
 }

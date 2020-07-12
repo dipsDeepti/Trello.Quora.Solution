@@ -41,5 +41,16 @@ public class UserDao {
         entityManager.merge(updatedUserEntity);
     }
 
+    // getUser method fetches userEntity from database
+    public UserEntity getUser(final String userUuid) {
+        try {
+            return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", userUuid)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+
 }
 
