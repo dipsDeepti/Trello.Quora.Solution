@@ -2,7 +2,7 @@ package com.upgrad.quora.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import com.upgrad.quora.api.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,6 +63,7 @@ public class AnswerController {
 	public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion(
 			@RequestHeader("authorization") final String accessToken, @PathVariable("questionId") String questionId)
 			throws AuthorizationFailedException, InvalidQuestionException {
+
 		List<AnswerEntity> answers = answerService.getAllAnswersToQuestion(questionId, accessToken);
 		List<AnswerDetailsResponse> answerDetailsResponses = new ArrayList<>();
 		for (AnswerEntity answerEntity : answers) {
