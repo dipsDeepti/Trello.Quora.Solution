@@ -43,7 +43,10 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions() {
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String authorization) 
+       throws AuthorizationFailedException
+    {
+        final UserAuthEntity userEntity = userBusinessService.getUserAuthByToken(authorization);  
         List<QuestionEntity> questionEntities = questionService.getAllQuestions();
         List<QuestionDetailsResponse> responses = new ArrayList<QuestionDetailsResponse>();
         HttpHeaders headers = new HttpHeaders();
@@ -63,7 +66,7 @@ public class QuestionController {
     public ResponseEntity<QuestionEditResponse> editQuestion(@PathVariable("questionId") final String questionId,
                                                              QuestionEditRequest requestModel,
                                                              @RequestHeader("authorization") final String authorizationToken)
-            throws AuthorizationFailedException
+            throws AuthorizationFailedException, InvalidQuestionException
     {
         final UserAuthEntity userEntity = userBusinessService.getUserAuthByToken(authorizationToken);
         QuestionEntity questionEntity =  questionService.editQuestionContent
@@ -73,7 +76,7 @@ public class QuestionController {
         QuestionEditResponse response = new QuestionEditResponse();
         response.setId(questionEntity.getUuid());
         response.setStatus("Question Edited");
-        return new ResponseEntity<QuestionEditResponse>(response, headers, HttpStatus.CREATED);
+        return new ResponseEntity<QuestionEditResponse>(response, headers, HttpStatus.OK);
     }
 
     // use this method to delete any question from db
