@@ -8,6 +8,8 @@ import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -148,6 +150,36 @@ public class UserBusinessService {
             userEntity = userAuthTokenEntity.getUserEntity();
             return userEntity;
         }
+
     }
+   
+   /**
+   * Deletes the user form the database.
+   */
+   @Transactional(propagation = Propagation.REQUIRED)
+   public UserEntity deleteUser(String uuid, String authorization) throws UserNotFoundException, AuthorizationFailedException {
+       UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorization);
+       if (userAuthEntity == null) {
+           // case when authorizationToken not found in database
+           throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+       } else if(userAuthEntity.getLogoutAt() != null) {
+           throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+       }
+        else if(userAuthEntity.getUserEntity() == null) {
+           throw new UserNotFoundException("USR-001", "User with entered uuid does not exist");
+       }
+        else if(userAuthEntity.getUserEntity().getRole().trim().toLowerCase().equals("admin"))
+          {
+              userDao.deleteUser(userAuthEntity.getUserEntity());
+          }
+        else{
+           throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
+        }
+          return  null;
+   }
+   
+   
+ 
+
 }
 

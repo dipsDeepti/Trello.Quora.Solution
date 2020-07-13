@@ -43,4 +43,22 @@ public class RestExceptionHandler {
             new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()),
             HttpStatus.UNAUTHORIZED);
   }
+  @ExceptionHandler(AuthorizationFailedException.class)
+  public ResponseEntity<ErrorResponse> authorizationFailedException(AuthorizationFailedException exe, WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+            new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.FORBIDDEN
+    );
+  }
+  @ExceptionHandler(InvalidQuestionException.class)
+  public ResponseEntity<ErrorResponse> invalidQuestionException(InvalidQuestionException exe, WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+            new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.NOT_FOUND
+    );
+  }
+  @ExceptionHandler(AnswerNotFoundException.class)
+  public ResponseEntity<ErrorResponse> answerNotFound(AnswerNotFoundException exe, WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+            new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.NOT_FOUND
+    );
+  }
 }
