@@ -119,37 +119,36 @@ public class UserBusinessService {
         }
     }
 
-    // getUser method get details of user based on userUuid and authorizationToken provided by user
-    public UserEntity getUser(final String userUuid, final String authorizationToken) throws UserNotFoundException,
-            AuthorizationFailedException {
-        UserAuthEntity userAuthTokenEntity = userAuthDao.getUserAuthToken(authorizationToken);
-        if (userAuthTokenEntity == null) {
+
+    /**
+     * Deletes the user form the database.
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserEntity deleteUser(String uuid, String authorization) throws UserNotFoundException, AuthorizationFailedException {
+        UserAuthEntity userAuthEntity = userAuthDao.getUserAuthByToken(authorization);
+        if (userAuthEntity == null) {
             // case when authorizationToken not found in database
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        } else {
-            String uuidString = userAuthTokenEntity.getUserEntity().getUuid();
-            if (uuidString != null) {
-                UserEntity userEntity = userDao.getUser(userUuid);
-                if (userEntity == null) {
-                    // case when userUuid not found in database
-                    throw new UserNotFoundException("USR-001", "User with entered uuid does not exist");
-                } else {
-                    if (uuidString.equals(userUuid)) {
-                        if (userAuthTokenEntity.getLogoutAt() == null) {
-                            return userEntity;
-                        } else {
-                            // case when user is signed out
-                            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
-                        }
-                    }
-
-
-                }
-
-
-            }
-            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        } else if(userAuthEntity.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
         }
+        else if(userAuthEntity.getUserEntity() == null) {
+            throw new UserNotFoundException("USR-001", "User with entered uuid does not exist");
+        }
+        else if(userAuthEntity.getUserEntity().getRole().trim().toLowerCase().equals("admin"))
+        {
+            UserEntity userEntity = userDao.getUser(uuid);
+            if(userEntity != null){
+                userDao.deleteUser(userEntity);
+            }else{
+                throw new UserNotFoundException("USR-001", "User with entered uuid does not exist");
+            }
+
+        }
+        else{
+            throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
+        }
+        return  null;
     }
 }
 
