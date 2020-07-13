@@ -11,16 +11,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "users", schema = "public")
-@NamedQueries({
-                @NamedQuery(name = "userByUuid", query = "select u from UserEntity u where u.uuid = :uuid"),
 @Table(name = "users")
 @NamedQueries({
         @NamedQuery(
                 name = "userByUserName",
                 query = "select u from UserEntity u where u.userName=:userName"),
         @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email=:email"),
-        @NamedQuery(name = "userByUserId", query = "select u from UserEntity u where u.uuid=:userId")
+        @NamedQuery(name = "userByUserId", query = "select u from UserEntity u where u.uuid=:userId"),
+        @NamedQuery(name = "userByUuid", query = "select u from UserEntity u where u.uuid = :uuid")
 })
 public class UserEntity implements Serializable {
 

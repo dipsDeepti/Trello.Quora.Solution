@@ -6,52 +6,49 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
-import java.io.Serializable;
-
 
 @Entity
-@Table(name = "user_auth")
+@Table(name = "answer")
 @NamedQueries({
+  @NamedQuery(name = "getAnswerById", query = "select a from AnswerEntity a where a.uuid=:uuid"),
   @NamedQuery(
-      name = "userAuthByAccessToken", query = "select u from UserAuthEntity u where u.accessToken=:accessToken")
+      name = "getAllAnswersToQuestion",
+      query = "select a from AnswerEntity a where a.questionEntity.uuid = :uuid")
 })
-
-public class UserAuthEntity {
-
+public class AnswerEntity {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @Column(name = "uuid")
-  @NotNull
   @Size(max = 200)
+  @NotNull
   private String uuid;
+
+  @Column(name = "ans")
+  @Size(max = 255)
+  @NotNull
+  private String answer;
+
+  @Column(name = "date")
+  @NotNull
+  private ZonedDateTime date;
 
   @ManyToOne
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "user_id")
   private UserEntity userEntity;
 
-  @Column(name = "access_token")
-  @NotNull
-  @Size(max = 500)
-  private String accessToken;
-
-  @Column(name = "expires_at")
-  @NotNull
-  private ZonedDateTime expiresAt;
-
-  @Column(name = "login_at")
-  @NotNull
-  private ZonedDateTime loginAt;
-
-  @Column(name = "logout_at")
-  private ZonedDateTime logoutAt;
+  @ManyToOne
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "question_id")
+  private QuestionEntity questionEntity;
 
   public Integer getId() {
     return id;
@@ -69,6 +66,22 @@ public class UserAuthEntity {
     this.uuid = uuid;
   }
 
+  public String getAnswer() {
+    return answer;
+  }
+
+  public void setAnswer(String answer) {
+    this.answer = answer;
+  }
+
+  public ZonedDateTime getDate() {
+    return date;
+  }
+
+  public void setDate(ZonedDateTime date) {
+    this.date = date;
+  }
+
   public UserEntity getUserEntity() {
     return userEntity;
   }
@@ -77,36 +90,12 @@ public class UserAuthEntity {
     this.userEntity = userEntity;
   }
 
-  public String getAccessToken() {
-    return accessToken;
+  public QuestionEntity getQuestionEntity() {
+    return questionEntity;
   }
 
-  public void setAccessToken(String accessToken) {
-    this.accessToken = accessToken;
-  }
-
-  public ZonedDateTime getExpiresAt() {
-    return expiresAt;
-  }
-
-  public void setExpiresAt(ZonedDateTime expiresAt) {
-    this.expiresAt = expiresAt;
-  }
-
-  public ZonedDateTime getLoginAt() {
-    return loginAt;
-  }
-
-  public void setLoginAt(ZonedDateTime loginAt) {
-    this.loginAt = loginAt;
-  }
-
-  public ZonedDateTime getLogoutAt() {
-    return logoutAt;
-  }
-
-  public void setLogoutAt(ZonedDateTime logoutAt) {
-    this.logoutAt = logoutAt;
+  public void setQuestionEntity(QuestionEntity questionEntity) {
+    this.questionEntity = questionEntity;
   }
 
   @Override
@@ -123,5 +112,4 @@ public class UserAuthEntity {
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
   }
-
 }

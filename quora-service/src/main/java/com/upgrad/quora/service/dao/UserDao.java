@@ -9,14 +9,7 @@ import javax.persistence.PersistenceContext;
 
 @Repository
 public class UserDao {
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    // getUser method fetches userEntity from database
-    public UserEntity getUser(final String userUuid) {
-        try {
-            return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", userUuid)
+    @PersistenceContext private EntityManager entityManager;
 
     public UserEntity createUser(UserEntity userEntity) {
         entityManager.persist(userEntity);
@@ -34,7 +27,6 @@ public class UserDao {
         }
     }
 
-    //getUserAuthToken fetch authentication information form database
     public UserEntity getUserByEmail(final String email) {
         try {
             return entityManager
@@ -48,12 +40,21 @@ public class UserDao {
     public void updateUserEntity(final UserEntity updatedUserEntity) {
         entityManager.merge(updatedUserEntity);
     }
-    public UserAuthEntity getUserAuthToken(final String accessToken) {
+
+    // getUser method fetches userEntity from database
+    public UserEntity getUser(final String userUuid) {
         try {
-            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+            return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", userUuid)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
+
+    public void deleteUser(final UserEntity userEntity) {
+        entityManager.remove(userEntity);
+    }
+
+
 }
 
